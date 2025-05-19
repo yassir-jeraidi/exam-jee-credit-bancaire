@@ -1,9 +1,11 @@
+import {Client} from './client.model';
+
 export interface Credit {
   id?: number;
   montant: number;
   taux: number;
   duree: number;
-  dateDebut: Date;
+  dateDemande: Date;
   clientId: number;
   client?: Client;
 }

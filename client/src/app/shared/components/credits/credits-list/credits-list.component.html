@@ -1,0 +1,192 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Credits</h1>
+    <button
+      (click)="openCreateModal()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+    >
+      Add New Credit
+    </button>
+  </div>
+
+  <app-loading
+    [isLoading]="isLoading"
+    message="Loading credits..."
+  ></app-loading>
+
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+      <tr>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Client
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Amount
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Start Date
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Actions
+        </th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <tr *ngFor="let credit of credits">
+        <td class="px-6 py-4 whitespace-nowrap">
+          {{ credit.id }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {{ credit.montant | currency }}
+        </td>
+
+        <td class="px-6 py-4 whitespace-nowrap">
+          {{ credit.dateDemande | date }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <button
+            (click)="openEditModal(credit)"
+            class="text-indigo-600 hover:text-indigo-900 mr-4"
+          >
+            Edit
+          </button>
+          <button
+            (click)="deleteCredit(credit.id!)"
+            class="text-red-600 hover:text-red-900"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-xl font-bold mb-4">
+      {{ isEditing ? 'Edit' : 'Create' }} Credit
+    </h2>
+    <form (ngSubmit)="onSubmit()" #creditForm="ngForm">
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="clientId"
+        >
+          Client
+        </label>
+        <select
+          id="clientId"
+          name="clientId"
+          [(ngModel)]="selectedCredit.clientId"
+          required
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="">Select a client</option>
+          <option *ngFor="let client of clients" [value]="client.id">
+            {{ client.nom }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="montant"
+        >
+          Amount
+        </label>
+        <input
+          type="number"
+          id="montant"
+          name="montant"
+          [(ngModel)]="selectedCredit.montant"
+          required
+          min="0"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="taux"
+        >
+          Interest Rate (%)
+        </label>
+        <input
+          type="number"
+          id="taux"
+          name="taux"
+          [(ngModel)]="selectedCredit.taux"
+          required
+          min="0"
+          max="100"
+          step="0.01"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="duree"
+        >
+          Duration (months)
+        </label>
+        <input
+          type="number"
+          id="duree"
+          name="duree"
+          [(ngModel)]="selectedCredit.duree"
+          required
+          min="1"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="dateDebut"
+        >
+          Demand Date
+        </label>
+        <input
+          type="date"
+          id="dateDebut"
+          name="dateDebut"
+          [(ngModel)]="selectedCredit.dateDemande"
+          required
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="flex justify-end gap-4">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="!creditForm.form.valid"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+        >
+          {{ isEditing ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

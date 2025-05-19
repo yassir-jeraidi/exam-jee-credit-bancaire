@@ -1,0 +1,155 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Remboursements</h1>
+    <button
+      (click)="openCreateModal()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+    >
+      Add New Remboursement
+    </button>
+  </div>
+
+  <app-loading
+    [isLoading]="isLoading"
+    message="Loading remboursements..."
+  ></app-loading>
+
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+      <tr>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Credit
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Amount
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Date
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Actions
+        </th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <tr *ngFor="let remboursement of remboursements">
+        <td class="px-6 py-4 whitespace-nowrap">
+          Credit #{{ remboursement.id }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {{ remboursement.montant | currency }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {{ remboursement.dateRemboursement | date }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <button
+            (click)="openEditModal(remboursement)"
+            class="text-indigo-600 hover:text-indigo-900 mr-4"
+          >
+            Edit
+          </button>
+          <button
+            (click)="deleteRemboursement(remboursement.id!)"
+            class="text-red-600 hover:text-red-900"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-xl font-bold mb-4">
+      {{ isEditing ? 'Edit' : 'Create' }} Remboursement
+    </h2>
+    <form (ngSubmit)="onSubmit()" #remboursementForm="ngForm">
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="creditId"
+        >
+          Credit
+        </label>
+        <select
+          id="creditId"
+          name="creditId"
+          [(ngModel)]="selectedRemboursement.creditId"
+          required
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="">Select a credit</option>
+          <option *ngFor="let credit of credits" [value]="credit.id">
+            {{ credit.client?.nom }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="montant"
+        >
+          Amount
+        </label>
+        <input
+          type="number"
+          id="montant"
+          name="montant"
+          [(ngModel)]="selectedRemboursement.montant"
+          required
+          min="0"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="dateRemboursement"
+        >
+          Date
+        </label>
+        <input
+          type="date"
+          id="dateRemboursement"
+          name="dateRemboursement"
+          [(ngModel)]="selectedRemboursement.dateRemboursement"
+          required
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="flex justify-end gap-4">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="!remboursementForm.form.valid"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+        >
+          {{ isEditing ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

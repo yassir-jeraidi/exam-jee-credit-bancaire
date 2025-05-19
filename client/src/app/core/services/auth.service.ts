@@ -9,7 +9,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl + 'auth/';
+  private apiUrl = environment.apiUrl + '/auth/';
 
   constructor(private http: HttpClient) {}
 
@@ -21,17 +21,13 @@ export class AuthService {
     return this.http.get<User>(this.apiUrl + 'me');
   }
 
-  logout(): Observable<any> {
-    return this.http.post(this.apiUrl + 'logout', {});
-  }
-
   getRedirectPath(role: string): string {
     try {
       switch (role) {
         case 'ADMIN':
           return '/admin';
-        case 'MANAGER':
-          return '/manager';
+        case 'EMPLOYE':
+          return '/employe';
         case 'CLIENT':
           return '/client';
         default:

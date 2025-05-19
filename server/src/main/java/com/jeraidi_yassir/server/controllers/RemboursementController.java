@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/remboursements")
+@RequestMapping("/api/v1/remboursements")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class RemboursementController {

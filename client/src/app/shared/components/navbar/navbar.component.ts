@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {NgIf} from '@angular/common';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {AuthService} from '../../../core/services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,19 +16,21 @@ export class NavbarComponent implements OnInit {
   profileMenuOpen = false;
   isAdminOrEmploye = false;
   isAdminOrEmployeOrClient = false;
+  isLoggedIn = false;
 
-  constructor(public authService: AuthService, private router: Router) {
-  }
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authService.me().subscribe({
       next: (user) => {
+        this.isLoggedIn = !!user;
         const role = user?.role;
         this.isAdminOrEmploye = role === 'ADMIN' || role === 'EMPLOYE';
         this.isAdminOrEmployeOrClient = role === 'ADMIN' || role === 'EMPLOYE' || role === 'CLIENT';
       },
       error: (error) => {
         console.error('Error fetching user role', error);
+        this.isLoggedIn = false;
         this.isAdminOrEmploye = false;
         this.isAdminOrEmployeOrClient = false;
       }
@@ -43,16 +46,9 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        console.log('Logout successful');
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Logout failed', error);
-      }
-    });
+    this.isLoggedIn = false;
+    this.isAdminOrEmploye = false;
+    this.isAdminOrEmployeOrClient = false;
+    this.router.navigate(['/login']);
   }
 }
