@@ -19,7 +19,7 @@ public class Client {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Credit> credits;
 
 }

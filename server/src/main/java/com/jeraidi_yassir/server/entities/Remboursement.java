@@ -1,9 +1,9 @@
 package com.jeraidi_yassir.server.entities;
 
-
 import com.jeraidi_yassir.server.enums.TypeRemboursement;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OptimisticLocking;
 
 import java.time.LocalDate;
 
@@ -15,15 +15,18 @@ public class Remboursement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    @Column(name = "date_remboursement")
+    private LocalDate dateRemboursement;
 
     private Double montant;
 
     @Enumerated(EnumType.STRING)
     private TypeRemboursement type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_id")
     private Credit credit;
-}
 
+    @Version
+    private Long version;
+}
