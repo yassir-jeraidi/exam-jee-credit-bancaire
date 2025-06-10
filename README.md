@@ -278,6 +278,10 @@ The frontend is built using Angular's standalone components architecture:
 - CORS configuration
 - Request validation
 
-## 8. Conclusion
+## 8. Screenshots
+
+The screenshots folder contains screenshots of all the app pages for the three roles. Each role has specific routes.
+
+## 9. Conclusion
 
 The Credit Management System demonstrates a well-structured, secure, and scalable application architecture. The separation of concerns between frontend and backend, along with proper implementation of security measures, makes it a robust solution for credit management.
